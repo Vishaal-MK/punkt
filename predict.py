@@ -5,7 +5,7 @@ from gector.gec_model import GecBERTModel
 
 
 def predict_for_file(input_file, output_file, model, batch_size=32):
-    test_data = read_lines(input_file)
+    test_data = input_file
     predictions = []
     cnt_corrections = 0
     batch = []
@@ -21,9 +21,11 @@ def predict_for_file(input_file, output_file, model, batch_size=32):
         predictions.extend(preds)
         cnt_corrections += cnt
 
-    with open(output_file, 'w') as f:
-        f.write("\n".join([" ".join(x) for x in predictions]) + '\n')
-    return cnt_corrections
+    return "\n".join([" ".join(x) for x in predictions]) + '\n'
+    
+    # with open(output_file, 'w') as f:
+    #     f.write("\n".join([" ".join(x) for x in predictions]) + '\n')
+    # return cnt_corrections
 
 
 def main(args):

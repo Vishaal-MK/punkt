@@ -244,7 +244,7 @@ class GecBERTModel(object):
 
     def postprocess_batch(self, batch, all_probabilities, all_idxs,
                           error_probs,
-                          max_len=50):
+                          max_len=500):
         all_results = []
         noop_index = self.vocab.get_token_index("$KEEP", "labels")
         for tokens, probabilities, idxs, error_prob in zip(batch,
@@ -305,6 +305,15 @@ class GecBERTModel(object):
             if not sequences:
                 break
             probabilities, idxs, error_probs = self.predict(sequences)
+
+            def filter(idxs):
+                allow = {2, 4, 14, 22, 105, 232}
+                for i, index in enumerate(idxs):
+                    if index not in allow:
+                        idxs[i] = 0
+                return idxs
+
+            idxs[0] = filter(idxs[0])
 
             pred_batch = self.postprocess_batch(orig_batch, probabilities,
                                                 idxs, error_probs)
